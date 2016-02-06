@@ -1,0 +1,1 @@
+exports.mongoConnectionString = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://zprager:bhtm1977@ds035740.mongolab.com:35740/heroku_app37016435';
