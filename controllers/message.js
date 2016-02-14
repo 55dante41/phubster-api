@@ -56,7 +56,7 @@ exports.sendMessage = function(req, res) {
                             'error': err
                         });
                 });
-                Message messageToSave = new Message();
+                var messageToSave = new Message();
                 messageToSave.sender = {
                     'username': sender.username,
                     'pushyId': sender.pushyId,
