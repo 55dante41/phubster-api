@@ -62,7 +62,7 @@ exports.getOrAddFacebookUser = function(req, res) {
                 user.facebook = {
                     'id': req.body.fbId,
                     'name': req.body.fbFullName,
-                    'email': req.body.fbEmailAddress
+                    'emailAddress': req.body.fbEmailAddress
                 };
                 user.pushyId = req.body.pushyId;
                 return user.save();
@@ -119,7 +119,7 @@ exports.getOrAddGPlusUser = function(req, res) {
                 user.gPlus = {
                     'id': req.body.gPlusId,
                     'name': req.body.gPlusFullName,
-                    'email': req.body.gPlusEmailAddress
+                    'emailAddress': req.body.gPlusEmailAddress
                 };
                 user.pushyId = req.body.pushyId;
                 return user.save();
