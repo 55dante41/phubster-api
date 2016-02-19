@@ -16,4 +16,6 @@ exports.init = function(router) {
         .post(userController.getOrAddFacebookUser);
     router.route('/api/users/gPlusSignIn')
         .post(userController.getOrAddGPlusUser);
+    router.route('/api/users/user')
+        .get(authController.isTokenAuthenticated, userController.getUser);
 };

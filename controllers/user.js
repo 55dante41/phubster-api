@@ -2,6 +2,14 @@ var User = require(process.cwd() + '/models/user.js');
 var authHelper = require(process.cwd() + '/helpers/auth.js');
 var Joi = require('joi');
 
+exports.getUser = function(req, res) {
+    res.status(200).send({
+        success: true,
+        message: 'Authentication successful; User found',
+        user: req.user
+    });
+};
+
 exports.addOrUpdatePushyId = function(req, res) {
     var pushyId = req.body.pushyId;
     var authenticatedUser = req.user;
