@@ -12,8 +12,8 @@ exports.init = function(router) {
         .post(authController.isTokenAuthenticated, userController.addOrUpdatePushyId);
     router.route('/api/users/add/direct')
         .post(userController.addDirectUser);
-    router.route('/api/users/add/fb')
-        .post(userController.addFacebookUser);
-    router.route('/api/users/add/gplus')
-        .post(userController.addGPlusUser);
+    router.route('/api/users/fbSignIn')
+        .post(userController.getOrAddFacebookUser);
+    router.route('/api/users/gPlusSignIn')
+        .post(userController.getOrAddGPlusUser);
 };
