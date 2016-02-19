@@ -42,6 +42,7 @@ exports.getOrAddFacebookUser = function(req, res) {
         .exec()
         .then(function(foundUser) {
             if (foundUser) {
+                console.log('User found');
                 user = foundUser;
                 res.status(200).send({
                     success: true,
@@ -52,6 +53,7 @@ exports.getOrAddFacebookUser = function(req, res) {
                     })
                 });
             } else {
+                console.log('User not found, creating a new one...')
                 user = new User();
                 var generatedUserName = req.body.fbEmailAddress.split('@')[0] + Math.floor(Math.random() * 10000);
                 var generatedPassword = Math.floor(Math.random() * 1000) + '' + Math.floor(Math.random() * 1000);
@@ -69,6 +71,7 @@ exports.getOrAddFacebookUser = function(req, res) {
             }
         })
         .then(function() {
+            console.log('Promise then called');
             res.status(200)
                 .send({
                     success: true,
