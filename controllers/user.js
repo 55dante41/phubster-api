@@ -44,14 +44,9 @@ exports.getOrAddFacebookUser = function(req, res) {
             if (foundUser) {
                 console.log('User found');
                 user = foundUser;
-                res.status(200).send({
-                    success: true,
-                    message: 'User found; Access Token fetched',
-                    token: authHelper.generateAccessToken({
-                        'userName': user.userName,
-                        'emailAddress': user.emailAddress
-                    })
-                });
+                var error = new Error();
+                error.handlerType = 'USER_FOUND::SEND_ACCESS_TOKEN';
+                throw error;
             } else {
                 console.log('User not found, creating a new one...')
                 user = new User();
@@ -84,12 +79,23 @@ exports.getOrAddFacebookUser = function(req, res) {
         })
         .catch(function(error) {
             console.log(error);
-            res.status(500)
-                .send({
-                    success: false,
-                    message: 'Request failed',
-                    error: error
+            if (error.handlerType === 'USER_FOUND::SEND_ACCESS_TOKEN') {
+                res.status(200).send({
+                    success: true,
+                    message: 'User found; Access Token fetched',
+                    token: authHelper.generateAccessToken({
+                        'userName': user.userName,
+                        'emailAddress': user.emailAddress
+                    })
                 });
+            } else {
+                res.status(500)
+                    .send({
+                        success: false,
+                        message: 'Request failed',
+                        error: error
+                    });
+            }
         });
 };
 
