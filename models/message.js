@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 
 var messageSchema = new mongoose.Schema({
     'sender': {
-        'username': {
+        'userName': {
             'type': String
         },
-        'fullname': {
+        'fullName': {
             'type': String
         },
         'pushyId': {
@@ -13,10 +13,10 @@ var messageSchema = new mongoose.Schema({
         }
     },
     'receiver': {
-        'username': {
+        'userName': {
             'type': String
         },
-        'fullname': {
+        'fullName': {
             'type': String
         },
         'pushyId': {

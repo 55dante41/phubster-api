@@ -19,11 +19,11 @@ exports.sendMessage = function(req, res) {
         var query;
         if (receiverUserName) {
             query = {
-                'username': receiverUserName
+                'userName': receiverUserName
             };
         } else if (receiverEmail) {
             query = {
-                'email': receiverEmail
+                'emailAddress': receiverEmail
             };
         }
         User
@@ -33,9 +33,9 @@ exports.sendMessage = function(req, res) {
                 pushyUtil.sendMessage(foundUser.pushyId, {
                     'message': message,
                     'sender': {
-                        'userName': sender.username,
-                        'email': sender.email,
-                        'fullName': sender.fullname
+                        'userName': sender.userName,
+                        'emailAddress': sender.emailAddress,
+                        'fullName': sender.fullName
                     },
                     'blockApps': true
                 }, function(response, body) {
@@ -58,16 +58,16 @@ exports.sendMessage = function(req, res) {
                 });
                 var messageToSave = new Message();
                 messageToSave.sender = {
-                    'username': sender.username,
+                    'userName': sender.userName,
                     'pushyId': sender.pushyId,
-                    'fullname': sender.fullname,
-                    'email': sender.email
+                    'fullName': sender.fullName,
+                    'emailAddress': sender.emailAddress
                 };
                 messageToSave.receiver = {
-                    'username': foundUser.username,
+                    'userName': foundUser.userName,
                     'pushyId': foundUser.pushyId,
-                    'fullname': foundUser.fullname,
-                    'email': foundUser.email
+                    'fullName': foundUser.fullName,
+                    'emailAddress': foundUser.emailAddress
                 };
                 messageToSave.message = message;
                 messageToSave.save(function(err) {
