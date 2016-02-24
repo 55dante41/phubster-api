@@ -18,4 +18,6 @@ exports.init = function(router) {
         .post(userController.getOrAddGPlusUser);
     router.route('/api/users/user')
         .get(authController.isTokenAuthenticated, userController.getUser);
+    router.route('/api/users/search')
+        .get(userController.findUsers);
 };

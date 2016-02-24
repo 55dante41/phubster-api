@@ -10,6 +10,47 @@ exports.getUser = function(req, res) {
     });
 };
 
+exports.findUsers = function(req, res) {
+    if (!req.query.searchValue) {
+        res
+            .status(400)
+            .send({
+                'success': false,
+                'message': 'Please specify the search value and try again!!'
+            });
+    } else {
+        User
+            .find({
+                $or: [{
+                    userName: req.query.searchValue
+                }, {
+                    emailAddress: req.query.searchValue
+                }, {
+                    fullName: req.query.searchValue
+                }]
+            })
+            .exec()
+            .then(function(searchResults) {
+                res
+                    .status(200)
+                    .send({
+                        'success': true,
+                        'message': 'Fetched query results.',
+                        'results': searchResults
+                    });
+            })
+            .catch(function(error) {
+                res
+                    .status(500)
+                    .send({
+                        'success': false,
+                        'message': 'Something went wrong, please try again.',
+                        'error': error
+                    });
+            });
+    }
+};
+
 exports.addOrUpdatePushyId = function(req, res) {
     var pushyId = req.body.pushyId;
     var authenticatedUser = req.user;
@@ -17,14 +58,16 @@ exports.addOrUpdatePushyId = function(req, res) {
     authenticatedUser.pushyId = pushyId;
     authenticatedUser.save(function(err) {
         if (err) {
-            res.status(500)
+            res
+                .status(500)
                 .send({
                     'success': false,
                     'message': 'Unable to update pushyId',
                     'error': err
                 });
         } else {
-            res.status(200)
+            res
+                .status(200)
                 .send({
                     'success': true,
                     'message': 'Updated pushyId successfully'
