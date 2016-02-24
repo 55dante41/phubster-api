@@ -26,6 +26,31 @@ exports.getSentInvites = function(req, res) {
         });
 };
 
+exports.getReceivedInvites = function(req, res) {
+    User
+        .findOne({ _id: req.user._id })
+        .populate('receivedInvites._sender', 'userName emailAddress fullName')
+        .exec()
+        .then(function(foundUser) {
+            res
+                .status(200)
+                .send({
+                    success: true,
+                    message: 'Fetched received invites',
+                    invites: foundUser.receivedInvites
+                });
+        })
+        .catch(function(error) {
+            res
+                .status(500)
+                .send({
+                    success: false,
+                    message: 'Something went wrong, please try again.',
+                    error: error
+                });
+        });
+};
+
 exports.sendFriendInvite = function(req, res) {
     var recipient, sender;
     if (!req.body.friendId) {

@@ -26,7 +26,7 @@ exports.init = function(router) {
     router.route('/api/friends/invites/sent')
         .get(authController.isTokenAuthenticated, friendsController.getSentInvites);
     router.route('/api/friends/invites/received')
-        .get(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
+        .get(authController.isTokenAuthenticated, friendsController.getReceivedInvites);
     router.route('/api/friends/invites/accept')
         .post(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
     router.route('/api/friends/invites/reject')
