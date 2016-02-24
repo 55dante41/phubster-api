@@ -31,6 +31,7 @@ exports.sendMessage = function(req, res) {
             .exec()
             .then(function(foundUser) {
                 pushyUtil.sendMessage(foundUser.pushyId, {
+                    'messageType': 'USER_MESSAGE',
                     'message': message,
                     'sender': {
                         'userName': sender.userName,
