@@ -4,7 +4,7 @@ var User = require(process.cwd() + '/models/user.js');
 exports.getSentInvites = function(req, res) {
     User
         .findOne({ _id: req.user._id })
-        .populate('_recipient')
+        .populate('sentInvites')
         .exec()
         .then(function(foundUser) {
             res
