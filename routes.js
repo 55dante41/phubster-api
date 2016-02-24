@@ -23,4 +23,14 @@ exports.init = function(router) {
         .get(userController.findUsers);
     router.route('/api/friends/invites/send')
         .post(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
+    router.route('/api/friends/invites/sent')
+        .get(authController.isTokenAuthenticated, friendsController.getSentInvites);
+    router.route('/api/friends/invites/received')
+        .get(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
+    router.route('/api/friends/invites/accept')
+        .post(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
+    router.route('/api/friends/invites/reject')
+        .post(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
+    router.route('/api/friends/invites/withdraw')
+        .post(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
 };

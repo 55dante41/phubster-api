@@ -1,6 +1,31 @@
 var pushyUtil = require(process.cwd() + '/util/pushy.js');
 var User = require(process.cwd() + '/models/user.js');
 
+exports.getSentInvites = function(req, res) {
+    User
+        .findOne({ _id: req.user._id })
+        .populate('_recipient', 'userName emailAddress fullName')
+        .exec()
+        .then(function(foundUser) {
+            res
+                .status(200)
+                .send({
+                    success: true,
+                    message: 'Fetched sent invites',
+                    invites: foundUser.sentInvites
+                });
+        })
+        .catch(function(error) {
+            res
+                .status(500)
+                .send({
+                    success: false,
+                    message: 'Something went wrong, please try again.',
+                    error: error
+                });
+        });
+};
+
 exports.sendFriendInvite = function(req, res) {
     var recipient, sender;
     if (!req.body.friendId) {
