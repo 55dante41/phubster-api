@@ -29,6 +29,7 @@ exports.findUsers = function(req, res) {
                     fullName: req.query.searchValue
                 }]
             })
+            .select('userName emailAddress fullName')
             .exec()
             .then(function(searchResults) {
                 res
