@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
-var userSchema = new mongoose.Schema({
+var Schema = mongoose.Schema;
+
+var userSchema = new Schema({
     userName: {
         type: String,
         required: true,
@@ -47,7 +49,7 @@ var userSchema = new mongoose.Schema({
     },
     friends: [{
         _friend: {
-            type: String,
+            type: Schema.Types.ObjectId,
             ref: 'User'
         },
         source: {
@@ -56,7 +58,7 @@ var userSchema = new mongoose.Schema({
     }],
     sentInvites: [{
         _recipient: {
-            type: String,
+            type: Schema.Types.ObjectId,
             ref: 'User'
         },
         source: {
@@ -65,7 +67,7 @@ var userSchema = new mongoose.Schema({
     }],
     receivedInvites: [{
         _sender: {
-            type: String,
+            type: Schema.Types.ObjectId,
             ref: 'User'
         },
         source: {
