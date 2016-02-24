@@ -2,6 +2,7 @@ var messageController = require(process.cwd() + '/controllers/message.js');
 var userController = require(process.cwd() + '/controllers/user.js');
 var pushyController = require(process.cwd() + '/controllers/pushy.js');
 var authController = require(process.cwd() + '/controllers/auth.js');
+var friendsController = require(process.cwd() + '/controllers/friends.js');
 
 exports.init = function(router) {
     router.route('/api/users/authenticate')
