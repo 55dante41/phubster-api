@@ -46,7 +46,7 @@ var userSchema = new mongoose.Schema({
         }
     },
     friends: [{
-        friend: {
+        _friend: {
             type: String,
             ref: 'User'
         },
@@ -55,7 +55,7 @@ var userSchema = new mongoose.Schema({
         }
     }],
     sentInvites: [{
-        recipient: {
+        _recipient: {
             type: String,
             ref: 'User'
         },
@@ -64,7 +64,7 @@ var userSchema = new mongoose.Schema({
         }
     }],
     receivedInvites: [{
-        sender: {
+        _sender: {
             type: String,
             ref: 'User'
         },
