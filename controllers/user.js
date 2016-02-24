@@ -200,41 +200,52 @@ exports.getOrAddGPlusUser = function(req, res) {
 };
 
 exports.addDirectUser = function(req, res) {
-    User
-        .find({
-            $or: [{
-                userName: req.body.userName
-            }, {
-                emailAddress: req.body.emailAddress
-            }]
-        })
-        .exec()
-        .then(function(foundUsers) {
-            if (foundUsers.length > 0) {
-                throw new Error('User already exists');
-            } else {
-                var user = new User();
-                user.userName = req.body.userName;
-                user.fullName = req.body.fullName;
-                user.emailAddress = req.body.emailAddress;
-                user.password = req.body.password;
-                user.pushyId = req.body.pushyId;
-                return user.save();
-            }
-        })
-        .then(function() {
-            res.status(200)
-                .send({
-                    success: true,
-                    message: 'User registered successfully'
-                });
-        })
-        .catch(function(error) {
-            res.status(500)
-                .send({
-                    success: false,
-                    message: 'User registration failed',
-                    error: error
-                });
-        });
+    if (!req.body.userName || !req.body.emailAddress || !req.body.password) {
+        res
+            .status(400)
+            .send({
+                success: false,
+                message: 'Missing one of required params: userName, emailAddress, password'
+            });
+    } else {
+        User
+            .find({
+                $or: [{
+                    userName: req.body.userName
+                }, {
+                    emailAddress: req.body.emailAddress
+                }]
+            })
+            .exec()
+            .then(function(foundUsers) {
+                if (foundUsers.length > 0) {
+                    throw new Error('User already exists');
+                } else {
+                    var user = new User();
+                    user.userName = req.body.userName;
+                    user.fullName = req.body.fullName;
+                    user.emailAddress = req.body.emailAddress;
+                    user.password = req.body.password;
+                    user.pushyId = req.body.pushyId;
+                    return user.save();
+                }
+            })
+            .then(function() {
+                res
+                    .status(200)
+                    .send({
+                        success: true,
+                        message: 'User registered successfully'
+                    });
+            })
+            .catch(function(error) {
+                res
+                    .status(500)
+                    .send({
+                        success: false,
+                        message: 'User registration failed',
+                        error: error
+                    });
+            });
+    }
 };
