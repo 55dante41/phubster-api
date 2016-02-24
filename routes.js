@@ -10,7 +10,7 @@ exports.init = function(router) {
         .post(authController.isTokenAuthenticated, messageController.sendMessage);
     router.route('/api/users/update/pushyId')
         .post(authController.isTokenAuthenticated, userController.addOrUpdatePushyId);
-    router.route('/api/users/add/direct')
+    router.route('/api/users/register')
         .post(userController.addDirectUser);
     router.route('/api/users/fbSignIn')
         .post(userController.getOrAddFacebookUser);
