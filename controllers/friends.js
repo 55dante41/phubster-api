@@ -62,6 +62,22 @@ exports.sendFriendInvite = function(req, res) {
             });
     } else {
         sender = req.user;
+        if (sender.friends.filter(function(e) {
+                return e._friend == req.body.friendId
+            })) {
+            throw new Error('Requested user is already a friend');
+        }
+        if (sender.sentInvites.filter(function(e) {
+                return e._recipient == req.body.friendId
+            })) {
+            throw new Error('Already sent a friend request');
+        }
+        if (sender.receivedInvites.filter(function(e) {
+                return e._sender == req.body.friendId
+            })) {
+            throw new Error('Already received a friend request');
+        }
+        
         User
             .findOne({ _id: req.body.friendId })
             .exec()
@@ -120,7 +136,90 @@ exports.withdrawSentFriendInvite = function(req, res) {
 };
 
 exports.acceptReceivedFriendInvite = function(req, res) {
+    if (!req.body.friendId) {
+        res
+            .status(400)
+            .send({
+                success: true,
+                message: 'Missing param: friendId'
+            });
+    } else {
+        var recipient, sender;
+        var recipientReceivedInvite, senderSentInvite;
+        var recipientReceivedInviteIndex, senderSentInviteIndex;
 
+        recipient = req.user;
+        User.findOne({ _id: req.body.friendId })
+            .exec()
+            .then(function(foundUser) {
+                sender = foundUser;
+                recipient.receivedInvites.forEach(function(invite, index) {
+                    if (invite._sender == sender._id) {
+                        recipientReceivedInvite = invite;
+                        recipientReceivedInviteIndex = index;
+                        break;
+                    }
+                });
+                var recipientAcceptedFriend = {
+                    _friend: recipientReceivedInvite._sender,
+                    source: recipientReceivedInvite.source
+                };
+                recipient.friends.push(recipientAcceptedFriend);
+                recipient.receivedInvites.splice(recipientReceivedInviteIndex, 1);
+                return recipient.save();
+            })
+            .then(function() {
+                sender.sentInvites.forEach(function(invite, index) {
+                    if (invite._recipient == recipient._id) {
+                        senderSentInvite = invite;
+                        senderSentInviteIndex = index;
+                        break;
+                    }
+                });
+                var senderAcceptedFriend = {
+                    _friend: senderSentInvite._recipient,
+                    source: senderSentInvite.source
+                };
+                sender.friends.push(senderAcceptedFriend);
+                sender.sentInvites.splice(senderSentInviteIndex, 1);
+                return sender.save();
+            })
+            .then(function(error) {
+                res
+                    .status(200)
+                    .send({
+                        success: true,
+                        message: 'Friend invite sent successfully'
+                    });
+                pushyUtil.sendMessage(recipient.pushyId, {
+                    messageType: 'PUSHY_MESSAGE'
+                }, function(response, body) {
+                    console.log('Pushy response for: ', recipient.pushyId);
+                    console.log(body);
+                }, function(err) {
+                    console.log('Pushy error');
+                    console.log(err);
+                });
+                pushyUtil.sendMessage(sender.pushyId, {
+                    messageType: 'PUSHY_MESSAGE'
+                }, function(response, body) {
+                    console.log('Pushy response for: ', recipient.pushyId);
+                    console.log(body);
+                }, function(err) {
+                    console.log('Pushy error');
+                    console.log(err);
+                });
+            })
+            .catch(function(error) {
+                res
+                    .status(500)
+                    .send({
+                        success: false,
+                        message: 'Something went wrong!!',
+                        error: error
+                    });
+            });
+    }
 };
 
 exports.rejectReceivedFriendInvite = function(req, res) {
