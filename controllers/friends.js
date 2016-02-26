@@ -64,20 +64,20 @@ exports.sendFriendInvite = function(req, res) {
         sender = req.user;
         if (sender.friends.filter(function(e) {
                 return e._friend == req.body.friendId
-            })) {
+            }).length > 0) {
             throw new Error('Requested user is already a friend');
         }
         if (sender.sentInvites.filter(function(e) {
                 return e._recipient == req.body.friendId
-            })) {
+            }).length > 0) {
             throw new Error('Already sent a friend request');
         }
         if (sender.receivedInvites.filter(function(e) {
                 return e._sender == req.body.friendId
-            })) {
+            }).length > 0) {
             throw new Error('Already received a friend request');
         }
-        
+
         User
             .findOne({ _id: req.body.friendId })
             .exec()

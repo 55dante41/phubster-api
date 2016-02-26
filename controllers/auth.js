@@ -18,8 +18,7 @@ exports.getAuthenticationToken = function(req, res, next) {
         res.status(403)
             .send({
                 success: false,
-                message: 'userName/emailAddress required',
-                data: {}
+                message: 'userName/emailAddress required'
             });
         return;
     }
@@ -31,8 +30,7 @@ exports.getAuthenticationToken = function(req, res, next) {
             res.status(500)
                 .send({
                     success: false,
-                    message: 'Internal Server Error',
-                    data: err
+                    message: 'Internal Server Error'
                 });
             return;
         }
@@ -49,8 +47,7 @@ exports.getAuthenticationToken = function(req, res, next) {
                     res.status(403)
                         .send({
                             success: false,
-                            message: 'gPlusId required',
-                            data: {}
+                            message: 'gPlusId required'
                         });
                     return;
                 }
@@ -65,15 +62,14 @@ exports.getAuthenticationToken = function(req, res, next) {
                         .send({
                             success: true,
                             message: 'Authentication successful',
-                            data: token
+                            token: token
                         });
                     return;
                 } else {
                     res.status(403)
                         .send({
                             success: false,
-                            message: 'Wrong Google plus access token',
-                            data: {}
+                            message: 'Wrong Google plus access token'
                         });
                     return;
                 }
@@ -82,8 +78,7 @@ exports.getAuthenticationToken = function(req, res, next) {
                     res.status(403)
                         .send({
                             success: false,
-                            message: 'fbId required',
-                            data: {}
+                            message: 'fbId required'
                         });
                     return;
                 }
@@ -98,15 +93,14 @@ exports.getAuthenticationToken = function(req, res, next) {
                         .send({
                             success: true,
                             message: 'Authentication successful',
-                            data: token
+                            token: token
                         });
                     return;
                 } else {
                     res.status(403)
                         .send({
                             success: false,
-                            message: 'Wrong facebook access token',
-                            data: {}
+                            message: 'Wrong facebook access token'
                         });
                     return;
                 }
@@ -123,15 +117,14 @@ exports.getAuthenticationToken = function(req, res, next) {
                             .send({
                                 success: true,
                                 message: 'Authentication successful',
-                                data: token
+                                token: token
                             });
                         return;
                     } else {
                         res.status(403)
                             .send({
                                 success: false,
-                                message: 'Credentials does not match',
-                                data: {}
+                                message: 'Credentials does not match'
                             });
                         return;
                     }
@@ -150,7 +143,7 @@ exports.getAuthenticationToken = function(req, res, next) {
                             .send({
                                 success: true,
                                 message: 'Authentication successful',
-                                data: token
+                                token: token
                             });
                         return;
                     });
@@ -168,15 +161,14 @@ exports.getAuthenticationToken = function(req, res, next) {
                             .send({
                                 success: true,
                                 message: 'Authentication successful',
-                                data: token
+                                token: token
                             });
                         return;
                     } else {
                         res.status(403)
                             .send({
                                 success: false,
-                                message: 'Credentials does not match',
-                                data: {}
+                                message: 'Credentials does not match'
                             });
                         return;
                     }
@@ -195,7 +187,7 @@ exports.getAuthenticationToken = function(req, res, next) {
                             .send({
                                 success: true,
                                 message: 'Authentication successful',
-                                data: token
+                                token: token
                             });
                         return;
                     });
@@ -205,8 +197,7 @@ exports.getAuthenticationToken = function(req, res, next) {
                     res.status(403)
                         .send({
                             success: false,
-                            message: 'Password required',
-                            data: {}
+                            message: 'Password required'
                         });
                     return;
                 }
@@ -216,7 +207,7 @@ exports.getAuthenticationToken = function(req, res, next) {
                             .send({
                                 success: false,
                                 message: 'Wrong password',
-                                data: err
+                                error: err
                             });
                         return;
                     }
@@ -231,15 +222,14 @@ exports.getAuthenticationToken = function(req, res, next) {
                             .send({
                                 success: true,
                                 message: 'Authentication successful',
-                                data: token
+                                token: token
                             });
                         return;
                     } else {
                         res.status(403)
                             .send({
                                 success: false,
-                                message: 'Wrong password',
-                                data: {}
+                                message: 'Wrong password'
                             });
                         return;
                     }
@@ -249,8 +239,7 @@ exports.getAuthenticationToken = function(req, res, next) {
             res.status(404)
                 .send({
                     success: false,
-                    message: 'User not found',
-                    data: {}
+                    message: 'User not found'
                 });
             return;
         }
@@ -271,50 +260,48 @@ exports.isTokenAuthenticated = function(req, res, next) {
                     .send({
                         success: false,
                         message: 'Failed to authenticate token with token ' + token,
-                        data: err
+                        error: err
                     });
                 return;
             }
             // verification passed, put the decodedToken onto request object (req)
             // and move on to the next tick
-            User.findOne({
-                $or: [{
-                    userName: decodedToken.userName
-                }, {
-                    emailAddress: decodedToken.emailAddress
-                }]
-            }, function(err, foundUser) {
-                if (err) {
-                    res.status(500)
+            User
+                .findOne({
+                    $or: [{
+                        userName: decodedToken.userName
+                    }, {
+                        emailAddress: decodedToken.emailAddress
+                    }]
+                })
+                .select('-password')
+                .exec()
+                .then(function(foundUser) {
+                    if (foundUser) {
+                        req.user = foundUser; //putting the user ojbect into the req object, saved in session
+                        req.decodedToken = decodedToken;
+                        next();
+                    } else {
+                        throw new Error('User not found.');
+                    }
+                })
+                .catch(function(error) {
+                    res
+                        .status(500)
                         .send({
                             success: false,
-                            message: 'Internal Server error',
-                            data: err
+                            message: 'Server error while authenticating, please try again.',
+                            error: error
                         });
                     return;
-                }
-                if (foundUser) {
-                    req.user = foundUser; //putting the user ojbect into the req object, saved in session
-                    req.decodedToken = decodedToken;
-                    next();
-                } else {
-                    res.status(404)
-                        .send({
-                            success: false,
-                            message: 'User not found',
-                            data: err
-                        });
-                    return;
-                }
-            });
+                });
         });
     } else {
         //if no token is found, send status 403 Forbidden
         res.status(403)
             .send({
                 success: false,
-                message: 'No token provided',
-                data: {}
+                message: 'No token provided'
             });
         return;
     }

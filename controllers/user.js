@@ -3,11 +3,13 @@ var authHelper = require(process.cwd() + '/helpers/auth.js');
 var Joi = require('joi');
 
 exports.getUser = function(req, res) {
-    res.status(200).send({
-        success: true,
-        message: 'Authentication successful; User found',
-        user: req.user
-    });
+    res
+        .status(200)
+        .send({
+            success: true,
+            message: 'Authentication successful; User found',
+            user: req.user
+        });
 };
 
 exports.findUsers = function(req, res) {
