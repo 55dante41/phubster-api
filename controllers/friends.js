@@ -157,7 +157,6 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                     if (invite._sender == sender._id) {
                         recipientReceivedInvite = invite;
                         recipientReceivedInviteIndex = index;
-                        break;
                     }
                 });
                 var recipientAcceptedFriend = {
@@ -173,7 +172,6 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                     if (invite._recipient == recipient._id) {
                         senderSentInvite = invite;
                         senderSentInviteIndex = index;
-                        break;
                     }
                 });
                 var senderAcceptedFriend = {
