@@ -3,12 +3,33 @@ var authHelper = require(process.cwd() + '/helpers/auth.js');
 var Joi = require('joi');
 
 exports.getUser = function(req, res) {
-    res
-        .status(200)
-        .send({
-            success: true,
-            message: 'Authentication successful; User found',
-            user: req.user
+    User
+        .findOne({ _id: req.user._id })
+        .populate('sentInvites._recipient', 'userName emailAddress fullName')
+        .populate('receivedInvites._sender', 'userName emailAddress fullName')
+        .populate('friends._friend', 'userName emailAddress fullName')
+        .exec()
+        .then(function(foundUser) {
+            if (!foundUser) {
+                throw new Error('User not found.');
+            } else {
+                res
+                    .status(200)
+                    .send({
+                        success: true,
+                        message: 'Authentication successful; User found',
+                        user: req.user
+                    });
+            }
+        })
+        .catch(function(error) {
+            res
+                .status(500)
+                .send({
+                    success: false,
+                    message: 'Something went wrong, please try again.',
+                    error: error
+                });
         });
 };
 
