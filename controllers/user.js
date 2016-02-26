@@ -8,6 +8,7 @@ exports.getUser = function(req, res) {
         .populate('sentInvites._recipient', 'userName emailAddress fullName')
         .populate('receivedInvites._sender', 'userName emailAddress fullName')
         .populate('friends._friend', 'userName emailAddress fullName')
+        .select('-password')
         .exec()
         .then(function(foundUser) {
             if (!foundUser) {
@@ -18,7 +19,7 @@ exports.getUser = function(req, res) {
                     .send({
                         success: true,
                         message: 'Authentication successful; User found',
-                        user: req.user
+                        user: foundUser
                     });
             }
         })
