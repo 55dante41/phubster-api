@@ -166,7 +166,7 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                     }
                 }
 
-                if (recipientReceivedInvite > -1) {
+                if (recipientReceivedInviteIndex > -1) {
                     recipient.receivedInvites.splice(recipientReceivedInviteIndex, 1);
                 }
                 return recipient.save();
