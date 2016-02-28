@@ -57,7 +57,7 @@ exports.sendFriendInvite = function(req, res) {
         res
             .status(400)
             .send({
-                success: true,
+                success: false,
                 message: 'Missing param: friendId'
             });
     } else {
@@ -182,7 +182,7 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                 sender.sentInvites.splice(senderSentInviteIndex, 1);
                 return sender.save();
             })
-            .then(function(error) {
+            .then(function() {
                 res
                     .status(200)
                     .send({
@@ -209,6 +209,7 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                 });
             })
             .catch(function(error) {
+                console.log(error);
                 res
                     .status(500)
                     .send({
