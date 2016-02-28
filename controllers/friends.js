@@ -154,6 +154,7 @@ exports.acceptReceivedFriendInvite = function(req, res) {
             .then(function(foundUser) {
                 sender = foundUser;
                 for (var i = 0; i < recipient.receivedInvites.length; i++) {
+                    console.log(recipient.receivedInvites);
                     if (recipient.receivedInvites[i]._sender == sender._id) {
                         recipientReceivedInvite = recipient.receivedInvites[i];
                         recipientReceivedInviteIndex = i;
