@@ -153,12 +153,12 @@ exports.acceptReceivedFriendInvite = function(req, res) {
             .exec()
             .then(function(foundUser) {
                 sender = foundUser;
-                recipient.receivedInvites.forEach(function(invite, index) {
-                    if (invite._sender == sender._id) {
-                        recipientReceivedInvite = invite;
-                        recipientReceivedInviteIndex = index;
+                for (var i = 0; i < recipient.receivedInvites.length; i++) {
+                    if (recipient.receivedInvites[i]._sender == sender._id) {
+                        recipientReceivedInvite = recipient.receivedInvites[i];
+                        recipientReceivedInviteIndex = i;
                     }
-                });
+                }
                 var recipientAcceptedFriend = {
                     _friend: recipientReceivedInvite._sender,
                     source: recipientReceivedInvite.source
@@ -168,12 +168,12 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                 return recipient.save();
             })
             .then(function() {
-                sender.sentInvites.forEach(function(invite, index) {
-                    if (invite._recipient == recipient._id) {
-                        senderSentInvite = invite;
-                        senderSentInviteIndex = index;
+                for (var i = 0; i < sender.sentInvites.length; i++) {
+                    if (sender.sentInvites[i]._recipient == recipient._id) {
+                        senderSentInvite = sender.sentInvites[i];
+                        senderSentInviteIndex = i;
                     }
-                });
+                }
                 var senderAcceptedFriend = {
                     _friend: senderSentInvite._recipient,
                     source: senderSentInvite.source
