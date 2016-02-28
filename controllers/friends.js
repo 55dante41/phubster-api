@@ -156,31 +156,37 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                 for (var i = 0; i < recipient.receivedInvites.length; i++) {
                     console.log(recipient.receivedInvites);
                     if (recipient.receivedInvites[i]._sender == sender._id) {
-                        recipientReceivedInvite = recipient.receivedInvites[i];
                         recipientReceivedInviteIndex = i;
+                        var recipientAcceptedFriend = {
+                            _friend: recipient.receivedInvites[i]._sender,
+                            source: recipient.receivedInvites[i].source
+                        };
+                        recipient.friends.push(recipientAcceptedFriend);
+                        break;
                     }
                 }
-                var recipientAcceptedFriend = {
-                    _friend: recipientReceivedInvite._sender,
-                    source: recipientReceivedInvite.source
-                };
-                recipient.friends.push(recipientAcceptedFriend);
-                recipient.receivedInvites.splice(recipientReceivedInviteIndex, 1);
+
+                if (recipientReceivedInvite > -1) {
+                    recipient.receivedInvites.splice(recipientReceivedInviteIndex, 1);
+                }
                 return recipient.save();
             })
             .then(function() {
                 for (var i = 0; i < sender.sentInvites.length; i++) {
                     if (sender.sentInvites[i]._recipient == recipient._id) {
-                        senderSentInvite = sender.sentInvites[i];
                         senderSentInviteIndex = i;
+                        var senderAcceptedFriend = {
+                            _friend: sender.sentInvites[i]._recipient,
+                            source: sender.sentInvites[i].source
+                        };
+                        sender.friends.push(senderAcceptedFriend);
+                        break;
                     }
                 }
-                var senderAcceptedFriend = {
-                    _friend: senderSentInvite._recipient,
-                    source: senderSentInvite.source
-                };
-                sender.friends.push(senderAcceptedFriend);
-                sender.sentInvites.splice(senderSentInviteIndex, 1);
+
+                if (senderSentInviteIndex > -1) {
+                    sender.sentInvites.splice(senderSentInviteIndex, 1);
+                }
                 return sender.save();
             })
             .then(function() {
