@@ -145,16 +145,16 @@ exports.acceptReceivedFriendInvite = function(req, res) {
             });
     } else {
         var recipient, sender;
-        var recipientReceivedInvite, senderSentInvite;
         var recipientReceivedInviteIndex, senderSentInviteIndex;
 
         recipient = req.user;
+        console.log(recipient);
         User.findOne({ _id: req.body.friendId })
             .exec()
             .then(function(foundUser) {
                 sender = foundUser;
+                console.log(sender);
                 for (var i = 0; i < recipient.receivedInvites.length; i++) {
-                    console.log(recipient.receivedInvites);
                     if (recipient.receivedInvites[i]._sender == sender._id) {
                         recipientReceivedInviteIndex = i;
                         var recipientAcceptedFriend = {
