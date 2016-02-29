@@ -65,17 +65,44 @@ exports.sendFriendInvite = function(req, res) {
         if (sender.friends.filter(function(e) {
                 return e._friend == req.body.friendId
             }).length > 0) {
-            throw new Error('Requested user is already a friend');
+            res
+                .status(400)
+                .send({
+                    success: false,
+                    message: 'Requested user is already a friend'
+                });
+            return;
         }
         if (sender.sentInvites.filter(function(e) {
                 return e._recipient == req.body.friendId
             }).length > 0) {
-            throw new Error('Already sent a friend request');
+            res
+                .status(400)
+                .send({
+                    success: false,
+                    message: 'Already sent a friend request'
+                });
+            return;
         }
         if (sender.receivedInvites.filter(function(e) {
                 return e._sender == req.body.friendId
             }).length > 0) {
-            throw new Error('Already received a friend request');
+            res
+                .status(400)
+                .send({
+                    success: false,
+                    message: 'Already received a friend request'
+                });
+            return;
+        }
+        if (sender._id.toString() == req.body.friendId) {
+            res
+                .status(400)
+                .send({
+                    success: false,
+                    message: 'You cannot send a request to yourself'
+                });
+            return;
         }
 
         User
@@ -148,12 +175,13 @@ exports.acceptReceivedFriendInvite = function(req, res) {
         var recipientReceivedInviteIndex, senderSentInviteIndex;
 
         recipient = req.user;
-        console.log(recipient);
         User.findOne({ _id: req.body.friendId })
             .exec()
             .then(function(foundUser) {
                 sender = foundUser;
-                console.log(sender);
+                if (sender._id.equals(recipient._id)) {
+                    throw new Error('Invalid request, the sender and recipient are the same user.');
+                }
                 for (var i = 0; i < recipient.receivedInvites.length; i++) {
                     if (recipient.receivedInvites[i]._sender.equals(sender._id)) {
                         recipientReceivedInviteIndex = i;
