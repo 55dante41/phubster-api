@@ -155,7 +155,7 @@ exports.acceptReceivedFriendInvite = function(req, res) {
                 sender = foundUser;
                 console.log(sender);
                 for (var i = 0; i < recipient.receivedInvites.length; i++) {
-                    if (recipient.receivedInvites[i]._sender == sender._id) {
+                    if (recipient.receivedInvites[i]._sender.equals(sender._id)) {
                         recipientReceivedInviteIndex = i;
                         var recipientAcceptedFriend = {
                             _friend: recipient.receivedInvites[i]._sender,
@@ -173,7 +173,7 @@ exports.acceptReceivedFriendInvite = function(req, res) {
             })
             .then(function() {
                 for (var i = 0; i < sender.sentInvites.length; i++) {
-                    if (sender.sentInvites[i]._recipient == recipient._id) {
+                    if (sender.sentInvites[i]._recipient.equals(recipient._id)) {
                         senderSentInviteIndex = i;
                         var senderAcceptedFriend = {
                             _friend: sender.sentInvites[i]._recipient,
