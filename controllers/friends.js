@@ -16,7 +16,7 @@ exports.getFriendDetails = function(req, res) {
                     .send({
                         success: true,
                         message: 'Fetched friend.',
-                        invites: foundUser
+                        friend: foundUser
                     });
             }
         })
