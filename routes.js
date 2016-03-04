@@ -21,6 +21,8 @@ exports.init = function(router) {
         .get(authController.isTokenAuthenticated, userController.getUser);
     router.route('/api/users/search')
         .get(userController.findUsers);
+    router.route('/api/friends/friend')
+        .get(authController.isTokenAuthenticated, friendsController.getFriendDetails);
     router.route('/api/friends/invites/send')
         .post(authController.isTokenAuthenticated, friendsController.sendFriendInvite);
     router.route('/api/friends/invites/sent')
