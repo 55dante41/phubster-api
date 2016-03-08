@@ -232,6 +232,7 @@ exports.addDirectUser = function(req, res) {
                 message: 'Missing one of required params: userName, emailAddress, password'
             });
     } else {
+        var newUser;
         User
             .find({
                 $or: [{
@@ -245,13 +246,13 @@ exports.addDirectUser = function(req, res) {
                 if (foundUsers.length > 0) {
                     throw new Error('User already exists');
                 } else {
-                    var user = new User();
-                    user.userName = req.body.userName;
-                    user.fullName = req.body.fullName;
-                    user.emailAddress = req.body.emailAddress;
-                    user.password = req.body.password;
-                    user.pushyId = req.body.pushyId;
-                    return user.save();
+                    newUser = new User();
+                    newUser.userName = req.body.userName;
+                    newUser.fullName = req.body.fullName;
+                    newUser.emailAddress = req.body.emailAddress;
+                    newUser.password = req.body.password;
+                    newUser.pushyId = req.body.pushyId;
+                    return newUser.save();
                 }
             })
             .then(function() {
@@ -261,8 +262,8 @@ exports.addDirectUser = function(req, res) {
                         success: true,
                         message: 'User registered successfully',
                         token: authHelper.generateAccessToken({
-                            'userName': user.userName,
-                            'emailAddress': user.emailAddress
+                            'userName': newUser.userName,
+                            'emailAddress': newUser.emailAddress
                         })
                     });
             })
