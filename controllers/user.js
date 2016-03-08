@@ -259,7 +259,11 @@ exports.addDirectUser = function(req, res) {
                     .status(200)
                     .send({
                         success: true,
-                        message: 'User registered successfully'
+                        message: 'User registered successfully',
+                        token: authHelper.generateAccessToken({
+                            'userName': user.userName,
+                            'emailAddress': user.emailAddress
+                        })
                     });
             })
             .catch(function(error) {
