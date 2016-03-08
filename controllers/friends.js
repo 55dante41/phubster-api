@@ -176,6 +176,15 @@ exports.sendFriendInvite = function(req, res) {
                     console.log('Pushy error');
                     console.log(err);
                 });
+                pushyUtil.sendMessage(sender.pushyId, {
+                    messageType: 'PUSHY_MESSAGE'
+                }, function(response, body) {
+                    console.log('Pushy response for: ', sender.pushyId);
+                    console.log(body);
+                }, function(err) {
+                    console.log('Pushy error');
+                    console.log(err);
+                });
             })
             .catch(function(error) {
                 res
