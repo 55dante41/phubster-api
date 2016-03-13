@@ -47,17 +47,11 @@ exports.findUsers = function(req, res) {
         User
             .find({
                 $or: [{
-                    $match: {
-                        userName: userRegex
-                    }
+                    userName: userRegex
                 }, {
-                    $match: {
-                        emailAddress: userRegex
-                    }
+                    emailAddress: userRegex
                 }, {
-                    $match: {
-                        fullName: userRegex
-                    }
+                    fullName: userRegex
                 }]
             })
             .select('userName emailAddress fullName')
