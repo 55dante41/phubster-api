@@ -43,14 +43,21 @@ exports.findUsers = function(req, res) {
                 'message': 'Please specify the search value and try again!!'
             });
     } else {
+        var userRegex = new RegExp(req.query.searchValue, 'i');
         User
             .find({
                 $or: [{
-                    userName: req.query.searchValue
+                    $match: {
+                        userName: userRegex
+                    }
                 }, {
-                    emailAddress: req.query.searchValue
+                    $match: {
+                        emailAddress: userRegex
+                    }
                 }, {
-                    fullName: req.query.searchValue
+                    $match: {
+                        fullName: userRegex
+                    }
                 }]
             })
             .select('userName emailAddress fullName')
