@@ -22,8 +22,7 @@ var userSchema = new Schema({
         required: true
     },
     pushyId: {
-        type: String,
-        required: true
+        type: String
     },
     facebook: {
         id: {
