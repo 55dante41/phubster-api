@@ -1,33 +1,35 @@
-var express = require( 'express' ),
-	mongoose = require( 'mongoose' ),
-	bodyParser = require( 'body-parser' ),
-	cors = require( 'cors' ),
-	cookieParser = require( 'cookie-parser' ),
-	routes = require( process.cwd( ) + '/routes.js' ),
-	dbConfig = require( process.cwd( ) + '/config/database.js' ),
-	envConfig = require( process.cwd( ) + '/config/environment.js' );
+require('./globals').init(__dirname);
 
-mongoose.connect( dbConfig.mongoConnectionString, function ( err, res ) {
-	if ( err ) {
-		console.log( 'Error connecting to MongoDB (MongoLab)' );
-		console.log( err );
-	} else {
-		console.log( 'Successfully established connection with MongoLab' );
-	}
-} );
+var express = require('express'),
+    mongoose = require('mongoose'),
+    bodyParser = require('body-parser'),
+    cors = require('cors'),
+    cookieParser = require('cookie-parser'),
+    routes = require(process.cwd() + '/routes.js'),
+    dbConfig = require(process.cwd() + '/config/database.js'),
+    envConfig = require(process.cwd() + '/config/environment.js');
 
-var app = express( );
+mongoose.connect(dbConfig.mongoConnectionString, function(err, res) {
+    if (err) {
+        console.log('Error connecting to MongoDB (MongoLab)');
+        console.log(err);
+    } else {
+        console.log('Successfully established connection with MongoLab');
+    }
+});
 
-app.use( bodyParser.urlencoded( {
-	extended: true
-} ) );
-app.use( bodyParser.json( ) );
-app.use( cookieParser( ) );
-app.use( cors( ) );
+var app = express();
 
-var router = express.Router( );
-routes.init( router );
-app.use( '/', router );
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
 
-app.listen( envConfig.port );
-console.log( 'Server started and listening on port: ' + envConfig.port );
+var router = express.Router();
+routes.init(router);
+app.use('/', router);
+
+app.listen(envConfig.port);
+console.log('Server started and listening on port: ' + envConfig.port);

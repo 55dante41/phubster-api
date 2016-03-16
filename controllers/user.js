@@ -1,6 +1,10 @@
-var User = require(process.cwd() + '/models/user.js');
-var authHelper = require(process.cwd() + '/helpers/auth.js');
 var Joi = require('joi');
+
+var User = requireModel('user');
+var authHelper = requireHelper('auth');
+
+var UserNotFoundError = requireError('UserNotFoundError');
+var UserAlreadyExistsError = requireError('UserAlreadyExistsError');
 
 exports.getUser = function(req, res) {
     User
@@ -12,7 +16,7 @@ exports.getUser = function(req, res) {
         .exec()
         .then(function(foundUser) {
             if (!foundUser) {
-                throw new Error('User not found.');
+                throw new UserNotFoundError();
             } else {
                 res
                     .status(200)
@@ -24,13 +28,7 @@ exports.getUser = function(req, res) {
             }
         })
         .catch(function(error) {
-            res
-                .status(500)
-                .send({
-                    success: false,
-                    message: 'Something went wrong, please try again.',
-                    error: error
-                });
+            handleErrorResponse(error, res);
         });
 };
 
@@ -66,13 +64,7 @@ exports.findUsers = function(req, res) {
                     });
             })
             .catch(function(error) {
-                res
-                    .status(500)
-                    .send({
-                        'success': false,
-                        'message': 'Something went wrong, please try again.',
-                        'error': error
-                    });
+                handleErrorResponse(error, res);
             });
     }
 };
@@ -82,24 +74,19 @@ exports.addOrUpdatePushyId = function(req, res) {
     var authenticatedUser = req.user;
 
     authenticatedUser.pushyId = pushyId;
-    authenticatedUser.save(function(err) {
-        if (err) {
-            res
-                .status(500)
-                .send({
-                    'success': false,
-                    'message': 'Unable to update pushyId',
-                    'error': err
-                });
-        } else {
+    authenticatedUser
+        .save()
+        .then(function() {
             res
                 .status(200)
                 .send({
                     'success': true,
                     'message': 'Updated pushyId successfully'
                 });
-        }
-    });
+        })
+        .catch(function(error) {
+            handleErrorResponse(error, res);
+        });
 };
 
 exports.getOrAddFacebookUser = function(req, res) {
@@ -245,7 +232,7 @@ exports.addDirectUser = function(req, res) {
             .exec()
             .then(function(foundUsers) {
                 if (foundUsers.length > 0) {
-                    throw new Error('User already exists');
+                    throw new UserAlreadyExistsError();
                 } else {
                     newUser = new User();
                     newUser.userName = req.body.userName;
@@ -269,14 +256,7 @@ exports.addDirectUser = function(req, res) {
                     });
             })
             .catch(function(error) {
-                console.log(error);
-                res
-                    .status(500)
-                    .send({
-                        success: false,
-                        message: 'User registration failed',
-                        error: error
-                    });
+                handleErrorResponse(error, res);
             });
     }
 };
