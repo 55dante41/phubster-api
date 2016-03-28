@@ -3,6 +3,7 @@ var userController = require(process.cwd() + '/controllers/user.js');
 var pushyController = require(process.cwd() + '/controllers/pushy.js');
 var authController = require(process.cwd() + '/controllers/auth.js');
 var friendsController = require(process.cwd() + '/controllers/friends.js');
+var smsController = require(process.cwd() + '/controllers/sms.js');
 
 exports.init = function(router) {
     router.route('/api/users/authenticate')
@@ -17,6 +18,8 @@ exports.init = function(router) {
         .post(userController.getOrAddFacebookUser);
     router.route('/api/users/gPlusSignIn')
         .post(userController.getOrAddGPlusUser);
+    router.route('/api/users/verify/sms')
+        .post(smsController.sendVerificationCode);
     router.route('/api/users/user')
         .get(authController.isTokenAuthenticated, userController.getUser);
     router.route('/api/users/search')
