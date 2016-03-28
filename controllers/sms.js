@@ -6,7 +6,7 @@ exports.sendVerificationCode = function(req, res) {
         if (err) {
             res
                 .status(500)
-                .send({ message: 'Failed to send verification code. Please try again.' });
+                .send({ message: 'Failed to send verification code. Please try again.', error: err });
         } else {
             res
                 .status(200)
