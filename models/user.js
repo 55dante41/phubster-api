@@ -68,7 +68,7 @@ var userSchema = new Schema({
         status: {
             type: String
         },
-        verificationCode: {
+        code: {
             type: String
         }
     },
