@@ -13,7 +13,8 @@
     "jsonwebtoken": "^5.5.4",
     "mongoose": "^4.4.0",
     "request": "^2.69.0",
-    "textbelt": "0.0.3"
+    "textbelt": "0.0.3",
+    "twilio": "^2.9.1"
   },
   "devDependencies": {},
   "scripts": {

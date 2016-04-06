@@ -64,6 +64,14 @@ var userSchema = new Schema({
             type: String
         }
     }],
+    verification: {
+        status: {
+            type: String
+        },
+        verificationCode: {
+            type: String
+        }
+    },
     receivedInvites: [{
         _sender: {
             type: Schema.Types.ObjectId,
