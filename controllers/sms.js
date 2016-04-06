@@ -13,7 +13,7 @@ exports.sendVerificationCode = function(req, res) {
                 message: 'User already verified.'
             });
     } else {
-        var verificationCode = (Math.random() * 1000) + '' + (Math.random() * 1000);
+        var verificationCode = Math.ceil(Math.random() * 1000) + '' + Math.ceil(Math.random() * 1000);
         req.user.verification = {
             status: 'pending_verification',
             code: verificationCode
