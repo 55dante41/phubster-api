@@ -59,6 +59,15 @@ exports.verifyWithVerificationCode = function(req, res) {
                             message: 'Something went wrong. Please try again.'
                         });
                 } else {
+                    pushyUtil.sendMessage(req.user.pushyId, {
+                        messageType: 'PUSHY_MESSAGE'
+                    }, function(response, body) {
+                        console.log('Pushy response for: ', req.user.pushyId);
+                        console.log(body);
+                    }, function(err) {
+                        console.log('Pushy error');
+                        console.log(err);
+                    });
                     res
                         .status(200)
                         .send({
