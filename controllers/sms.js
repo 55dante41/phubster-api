@@ -25,7 +25,7 @@ exports.sendVerificationCode = function(req, res) {
         client.messages.create({
             to: req.query.mobileNumber,
             from: "+18556309805",
-            body: ,
+            body: message,
         }, function(err, message) {
             if (err) {
                 res
