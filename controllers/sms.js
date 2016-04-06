@@ -19,16 +19,20 @@ exports.sendVerificationCode = function(req, res) {
             code: verificationCode
         };
         req.user.save();
+        var message = "Please verify with code: " + verificationCode;
+        console.log(req.query.mobileNumber);
+        console.log(message);
         client.messages.create({
             to: req.query.mobileNumber,
             from: "+18556309805",
-            body: "Please verify with code: " + verificationCode,
+            body: ,
         }, function(err, message) {
             if (err) {
                 res
                     .status(400)
                     .send({
-                        message: 'Request failed. Please try again.'
+                        message: 'Request failed. Please try again.',
+                        error: err
                     });
             } else {
                 console.log(message.sid);
