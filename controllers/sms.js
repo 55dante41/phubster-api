@@ -20,7 +20,7 @@ exports.sendVerificationCode = function(req, res) {
         };
         req.user.save();
         client.messages.create({
-            to: req.body.mobileNumber,
+            to: req.query.mobileNumber,
             from: "+18556309805",
             body: "Please verify with code: " + verificationCode,
         }, function(err, message) {

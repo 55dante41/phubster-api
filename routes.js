@@ -19,7 +19,8 @@ exports.init = function(router) {
     router.route('/api/users/gPlusSignIn')
         .post(userController.getOrAddGPlusUser);
     router.route('/api/users/verify/sms')
-        .post(smsController.sendVerificationCode);
+        .get(smsController.sendVerificationCode)
+        .post(smsController.verifyWithVerificationCode);
     router.route('/api/users/user')
         .get(authController.isTokenAuthenticated, userController.getUser);
     router.route('/api/users/search')
