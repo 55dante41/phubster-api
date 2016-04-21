@@ -14,6 +14,10 @@ exports.getAuthenticationToken = function(req, res, next) {
         query = {
             emailAddress: req.body.emailAddress
         };
+    } else if (req.body.mobileNumber) {
+        query = {
+            mobileNumber: req.body.mobileNumber
+        };
     } else {
         res.status(403)
             .send({
@@ -273,6 +277,8 @@ exports.isTokenAuthenticated = function(req, res, next) {
                         userName: decodedToken.userName
                     }, {
                         emailAddress: decodedToken.emailAddress
+                    }, {
+                        mobileNumber: decodedToken.mobileNumber
                     }]
                 })
                 .select('-password')
