@@ -18,6 +18,8 @@ exports.init = function(router) {
         .post(userController.getOrAddFacebookUser);
     router.route('/api/users/gPlusSignIn')
         .post(userController.getOrAddGPlusUser);
+    router.route('/api/users/fbAKSignIn')
+        .post(userController.getOrAddFacebookAccountKitUser);
     router.route('/api/users/verify/sms')
         .get(authController.isTokenAuthenticated, smsController.sendVerificationCode)
         .post(authController.isTokenAuthenticated, smsController.verifyWithVerificationCode);

@@ -37,7 +37,8 @@ exports.getAuthenticationToken = function(req, res, next) {
         if (foundUser) {
             var payload = {
                 'userName': foundUser.userName,
-                'emailAddress': foundUser.emailAddress
+                'emailAddress': foundUser.emailAddress,
+                'mobileNumber': foundUser.mobileNumber
             };
             var token;
             if (foundUser.source == 'gplus') {

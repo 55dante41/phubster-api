@@ -260,3 +260,94 @@ exports.addDirectUser = function(req, res) {
             });
     }
 };
+
+exports.getOrAddFacebookAccountKitUser = function(req, res) {
+    var mobileNumber, emailAddress, accountId;
+    var hasMobileNumber = false,
+        hasEmailAddress = false;
+    var user;
+    if (req.body.mobileNumber) {
+        mobileNumber = req.body.mobileNumber;
+        hasMobileNumber = true;
+    }
+    if (req.body.emailAddress) {
+        emailAddress = req.body.emailAddress;
+        hasEmailAddress = true;
+    }
+    if (req.body.accountId) {
+        accountId = req.body.accountId;
+    }
+    if (!hasEmailAddress && !hasMobileNumber) {
+        res
+            .status(400)
+            .send();
+    } else {
+        var findQuery = {};
+        if (hasMobileNumber) {
+            findQuery.mobileNumber = mobileNumber;
+        }
+        if (hasEmailAddress) {
+            findQuery.emailAddress = emailAddress;
+        }
+        User
+            .findOne(findQuery)
+            .exec()
+            .then(function(foundUser) {
+                if (foundUser) {
+                    user = foundUser;
+                    user.verification = {
+                        status: 'verified',
+                        code: '000000'
+                    };
+                    user.mobileNumber = mobileNumber;
+                    user.emailAddress = emailAddress;
+                    user.facebook_ak = {
+                        id: accountId,
+                        emailAddress: emailAddress,
+                        mobileNumber: mobileNumber
+                    };
+                    if (req.body.pushyId) {
+                        user.pushyId = req.body.pushyId;
+                    }
+                    return user.save();
+                } else {
+                    user = new User();
+                    if (hasMobileNumber) {
+                        user.userName = 'ak_user_' + mobileNumber;
+                    } else if (hasEmailAddress) {
+                        user.userName = 'ak_user_' + emailAddress.split('@')[0];
+                    }
+                    user.mobileNumber = mobileNumber;
+                    user.emailAddress = emailAddress;
+                    user.verification = {
+                        status: 'verified',
+                        code: '000000'
+                    };
+                    user.source = 'facebook_account_kit';
+                    user.facebook_ak = {
+                        id: accountId,
+                        emailAddress: emailAddress,
+                        mobileNumber: mobileNumber
+                    };
+                    user.pushyId = req.body.pushyId;
+                    return user.save();
+                }
+            })
+            .then(function() {
+                res
+                    .status(200)
+                    .send({
+                        success: true,
+                        message: 'User registered successfully',
+                        token: authHelper.generateAccessToken({
+                            'userName': user.userName,
+                            'emailAddress': user.emailAddress,
+                            'mobileNumber': user.mobileNumber
+                        })
+                    });
+            })
+            .catch(function(error) {
+                handleErrorResponse(error, res);
+            });
+    }
+};
