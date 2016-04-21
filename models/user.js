@@ -10,19 +10,33 @@ var userSchema = new Schema({
         unique: true
     },
     fullName: {
-        type: String,
-        required: true
+        type: String
     },
     emailAddress: {
-        type: String,
-        required: true
+        type: String
+    },
+    mobileNumber: {
+        type: String
     },
     password: {
-        type: String,
-        required: true
+        type: String
     },
     pushyId: {
         type: String
+    },
+    source: {
+        type: String
+    },
+    facebook_ak: {
+        id: {
+            type: String
+        },
+        emailAddress: {
+            type: String
+        },
+        mobileNumber: {
+            type: String
+        }
     },
     facebook: {
         id: {
