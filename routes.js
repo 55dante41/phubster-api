@@ -10,6 +10,8 @@ exports.init = function(router) {
         .post(authController.getAuthenticationToken);
     router.route('/api/messages/send')
         .post(authController.isTokenAuthenticated, messageController.sendMessage);
+    router.route('/api/contacts/invites/send')
+        .post(authController.isTokenAuthenticated, smsController.sendInvites);
     router.route('/api/users/update/pushyId')
         .post(authController.isTokenAuthenticated, userController.addOrUpdatePushyId);
     router.route('/api/users/register')

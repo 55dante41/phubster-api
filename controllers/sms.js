@@ -6,6 +6,36 @@ var authToken = '11cf88d1d3e60c057f09b7eaa7b9cfc5';
 //require the Twilio module and create a REST client 
 var client = require('twilio')(accountSid, authToken);
 
+exports.sendInvites = function(req, res) {
+    var mobileNumbers = req.body.mobileNumbers;
+    var fullName = req.body.fullName;
+    var message = req.body.message;
+
+    if (mobileNumbers && mobileNumbers.length > 0) {
+        if (!message) {
+            message = "This is " + fullName + " via Andale chat. Please install this app to chat with me.";
+        }
+        mobileNumbers.forEach(function(mobileNumber) {
+            client.messages.create({
+                to: mobileNumber,
+                from: "+18556309805",
+                body: message,
+            })
+        });
+        res
+            .status(200)
+            .send({
+                'message': 'Invites queued.'
+            });
+    } else {
+        res
+            .status(400)
+            .send({
+                'message': 'No numbers selected.'
+            });
+    }
+};
+
 exports.sendVerificationCode = function(req, res) {
     if (req.user.verification && req.user.verification.status === 'verified') {
         res
