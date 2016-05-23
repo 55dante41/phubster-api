@@ -11,6 +11,11 @@ exports.sendInvites = function(req, res) {
     var fullName = req.body.fullName;
     var message = req.body.message;
 
+    console.log(mobileNumbers);
+    mobileNumbers = mobileNumbers.split('[').join('');
+    mobileNumbers = mobileNumbers.split(']').join('');
+    mobileNumbers = mobileNumbers.split(',');
+
     if (mobileNumbers && mobileNumbers.length > 0) {
         if (!message) {
             message = "This is " + fullName + " via Andale chat. Please install this app to chat with me.";
