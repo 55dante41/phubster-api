@@ -71,6 +71,34 @@ exports.findUsers = function(req, res) {
     }
 };
 
+exports.areAlreadyUsers = function(req, res) {
+    var mobileNumbers = req.body.numbers;
+
+    var isAUserMapping = {};
+    mobileNumbers.forEach(function(mobileNumber) {
+        isAUserMapping[mobileNumber] = false;
+    });
+
+    User
+        .find({
+            mobileNumber: {
+                $in: mobileNumbers
+            }
+        })
+        .exec()
+        .then(function(foundUsers) {
+            foundUsers.forEach(function(foundUser) {
+                isAUserMapping[foundUser.mobileNumber] = true;
+            });
+            res
+                .status(200)
+                .send(isAUserMapping);
+        })
+        .catch(function(error) {
+            handleErrorResponse(error, res);
+        })
+};
+
 exports.addOrUpdatePushyId = function(req, res) {
     var pushyId = req.body.pushyId;
     var authenticatedUser = req.user;
