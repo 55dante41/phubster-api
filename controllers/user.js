@@ -50,9 +50,11 @@ exports.findUsers = function(req, res) {
                     emailAddress: userRegex
                 }, {
                     fullName: userRegex
+                }, {
+                    mobileNumber: userRegex
                 }]
             })
-            .select('userName emailAddress fullName')
+            .select('userName emailAddress fullName mobileNumber')
             .exec()
             .then(function(searchResults) {
                 res
