@@ -72,7 +72,7 @@ exports.findUsers = function(req, res) {
 };
 
 exports.areAlreadyUsers = function(req, res) {
-    var mobileNumbers = req.body.numbers;
+    var mobileNumbers = req.body.mobileNumbers;
 
     mobileNumbers = mobileNumbers.split('[').join('');
     mobileNumbers = mobileNumbers.split(']').join('');
