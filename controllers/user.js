@@ -74,6 +74,10 @@ exports.findUsers = function(req, res) {
 exports.areAlreadyUsers = function(req, res) {
     var mobileNumbers = req.body.numbers;
 
+    mobileNumbers = mobileNumbers.split('[').join('');
+    mobileNumbers = mobileNumbers.split(']').join('');
+    mobileNumbers = mobileNumbers.split(',');
+
     var isAUserMapping = {};
     mobileNumbers.forEach(function(mobileNumber) {
         isAUserMapping[mobileNumber] = false;
