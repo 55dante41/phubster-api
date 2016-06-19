@@ -6,6 +6,65 @@ var authToken = '11cf88d1d3e60c057f09b7eaa7b9cfc5';
 //require the Twilio module and create a REST client 
 var client = require('twilio')(accountSid, authToken);
 
+exports.sendInvitesToNonFriends = function(req, res) {
+    var mobileNumbers = req.body.mobileNumbers;
+    var fullName = req.body.fullName;
+    var message = req.body.message;
+
+    console.log(mobileNumbers);
+    mobileNumbers = mobileNumbers.split('[').join('');
+    mobileNumbers = mobileNumbers.split(']').join('');
+    mobileNumbers = mobileNumbers.split(',');
+
+    if (mobileNumbers && mobileNumbers.length > 0) {
+        if (!message) {
+            message = "This is " + fullName + " via Andale chat. Please install this app to chat with me.";
+        }
+        mobileNumbers.forEach(function(mobileNumber) {
+            User
+                .findOne({ mobileNumber: mobileNumber })
+                .exec()
+                .then(function(foundUser) {
+                    if (foundUser) {
+                        var isAlreadyAFriend = false;
+                        req.user.friends.forEach(function(friend) {
+                            if (friend._friend == foundUser._id) {
+                                isAlreadyAFriend = true;
+                            }
+                        });
+                        if (!isAlreadyAFriend) {
+                            foundUser.friends.push(req.user._id);
+                            req.user.friends.push(foundUser._id);
+
+                            foundUser.save();
+                            req.user.save();
+                        }
+                    } else {
+                        client.messages.create({
+                            to: mobileNumber,
+                            from: "+18556309805",
+                            body: message,
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        });
+        res
+            .status(200)
+            .send({
+                'message': 'Invites queued.'
+            });
+    } else {
+        res
+            .status(400)
+            .send({
+                'message': 'No numbers selected.'
+            });
+    }
+};
+
 exports.sendInvites = function(req, res) {
     var mobileNumbers = req.body.mobileNumbers;
     var fullName = req.body.fullName;
