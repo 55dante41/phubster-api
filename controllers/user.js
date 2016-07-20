@@ -22,7 +22,7 @@ exports.getUser = function(req, res) {
                 console.log('.............');
                 console.log(JSON.stringify(foundUser));
                 console.log('.............');
-                
+
                 res
                     .status(200)
                     .send({
@@ -385,7 +385,10 @@ exports.getOrAddFacebookAccountKitUser = function(req, res) {
                 }
             })
             .then(function() {
+                console.log(',,,,,,,');
                 console.log(JSON.stringify(user));
+                console.log(',,,,,,,');
+                
                 res
                     .status(200)
                     .send({
