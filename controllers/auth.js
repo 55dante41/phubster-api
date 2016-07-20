@@ -271,16 +271,19 @@ exports.isTokenAuthenticated = function(req, res, next) {
             }
             // verification passed, put the decodedToken onto request object (req)
             // and move on to the next tick
+            console.log('decoded token:', JSON.stringify(decodedToken));
+            var findQuery = {
+                $or: [{
+                    userName: decodedToken.userName
+                }, {
+                    emailAddress: decodedToken.emailAddress
+                }, {
+                    mobileNumber: decodedToken.mobileNumber
+                }]
+            };
+            console.log('find query', JSON.stringify(findQuery));
             User
-                .findOne({
-                    $or: [{
-                        userName: decodedToken.userName
-                    }, {
-                        emailAddress: decodedToken.emailAddress
-                    }, {
-                        mobileNumber: decodedToken.mobileNumber
-                    }]
-                })
+                .findOne()
                 .select('-password')
                 .exec()
                 .then(function(foundUser) {
