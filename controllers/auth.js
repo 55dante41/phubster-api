@@ -292,7 +292,7 @@ exports.isTokenAuthenticated = function(req, res, next) {
             }
             console.log('find query', JSON.stringify(findQuery));
             User
-                .findOne()
+                .findOne(findQuery)
                 .select('-password')
                 .exec()
                 .then(function(foundUser) {
