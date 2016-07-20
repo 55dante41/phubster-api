@@ -7,6 +7,7 @@ var UserNotFoundError = requireError('UserNotFoundError');
 var UserAlreadyExistsError = requireError('UserAlreadyExistsError');
 
 exports.getUser = function(req, res) {
+    console.log(JSON.stringify(req.user));
     User
         .findOne({ _id: req.user._id })
         .populate('sentInvites._recipient', 'userName emailAddress fullName')
