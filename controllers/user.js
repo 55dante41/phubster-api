@@ -108,9 +108,13 @@ exports.addOrUpdatePushyId = function(req, res) {
     var authenticatedUser = req.user;
 
     authenticatedUser.pushyId = pushyId;
+    console.log('-------------');
+    console.log(pushyId);
+    console.log('-------------');
+    
     authenticatedUser
         .save()
-        .then(function() {
+        .then(function() {            
             res
                 .status(200)
                 .send({

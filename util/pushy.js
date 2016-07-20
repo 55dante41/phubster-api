@@ -22,6 +22,7 @@ exports.sendMessage = function(targets, data, successCb, errorCb) {
         console.log(err);
         console.log(JSON.stringify(httpResponse));
         console.log(body);
+        console.log(registrationIds);
         console.log('================');
         if (err) {
             errorCb(err);
