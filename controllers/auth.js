@@ -277,17 +277,17 @@ exports.isTokenAuthenticated = function(req, res, next) {
             };
             if (decodedToken.userName) {
                 findQuery['$or'].push({
-                    emailAddress: decodedToken.emailAddress
+                    userName: decodedToken.userName
                 });
             }
             if (decodedToken.emailAddress) {
                 findQuery['$or'].push({
-                    mobileNumber: decodedToken.mobileNumber
+                    emailAddress: decodedToken.emailAddress
                 });
             }
             if (decodedToken.mobileNumber) {
                 findQuery['$or'].push({
-                    userName: decodedToken.userName
+                    mobileNumber: decodedToken.mobileNumber
                 });
             }
             console.log('find query', JSON.stringify(findQuery));
