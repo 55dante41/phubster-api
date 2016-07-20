@@ -19,6 +19,7 @@ exports.getUser = function(req, res) {
             if (!foundUser) {
                 throw new UserNotFoundError();
             } else {
+                console.log(JSON.stringify(foundUser));
                 res
                     .status(200)
                     .send({
