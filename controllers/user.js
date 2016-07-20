@@ -111,7 +111,7 @@ exports.addOrUpdatePushyId = function(req, res) {
     console.log('-------------');
     console.log(pushyId);
     console.log('-------------');
-    
+
     authenticatedUser
         .save()
         .then(function() {            
@@ -315,6 +315,11 @@ exports.getOrAddFacebookAccountKitUser = function(req, res) {
     if (req.body.accountId) {
         accountId = req.body.accountId;
     }
+    console.log('++++++++++++++++');
+    console.log(mobileNumber);
+    console.log(emailAddress);
+    console.log(accountId);
+    console.log('++++++++++++++++');
     if (!hasEmailAddress && !hasMobileNumber) {
         res
             .status(400)
@@ -327,6 +332,9 @@ exports.getOrAddFacebookAccountKitUser = function(req, res) {
         if (hasEmailAddress) {
             findQuery.emailAddress = emailAddress;
         }
+        console.log('++++++++++++++++');
+        console.log(JSON.stringify(findQuery));
+        console.log('++++++++++++++++');
         User
             .findOne(findQuery)
             .exec()
