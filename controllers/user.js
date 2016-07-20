@@ -114,7 +114,7 @@ exports.addOrUpdatePushyId = function(req, res) {
 
     authenticatedUser
         .save()
-        .then(function() {            
+        .then(function() {
             res
                 .status(200)
                 .send({
@@ -380,6 +380,7 @@ exports.getOrAddFacebookAccountKitUser = function(req, res) {
                 }
             })
             .then(function() {
+                console.log(JSON.stringify(user));
                 res
                     .status(200)
                     .send({
