@@ -11,7 +11,7 @@ exports.sendMessage = function(targets, data, successCb, errorCb) {
         registrationIds.push(targets);
     }
     request.post({
-        'url': 'https://pushy.me/push?api_key=' + authConfig.pushyAPIToken,
+        'url': 'https://api.pushy.me/push?api_key=' + authConfig.pushyAPIToken,
         'json': true,
         'body': {
             'registration_ids': registrationIds,
