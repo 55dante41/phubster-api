@@ -9,7 +9,7 @@ var UserAlreadyExistsError = requireError('UserAlreadyExistsError');
 exports.getUser = function(req, res) {
     console.log(JSON.stringify(req.user));
     User
-        .findOne({ _id: req.user._id })
+        .findOne({ userName: req.user.userName })
         .populate('sentInvites._recipient', 'userName emailAddress fullName')
         .populate('receivedInvites._sender', 'userName emailAddress fullName')
         .populate('friends._friend', 'userName emailAddress fullName')
@@ -19,7 +19,10 @@ exports.getUser = function(req, res) {
             if (!foundUser) {
                 throw new UserNotFoundError();
             } else {
+                console.log('.............');
                 console.log(JSON.stringify(foundUser));
+                console.log('.............');
+                
                 res
                     .status(200)
                     .send({
