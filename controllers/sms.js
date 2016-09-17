@@ -3,6 +3,8 @@ var pushyUtil = require(process.cwd() + '/util/pushy.js');
 var accountSid = 'ACc523e75f72cd4a1ebd5de356e55065d2';
 var authToken = '11cf88d1d3e60c057f09b7eaa7b9cfc5';
 
+var User = require( process.cwd( ) + '/models/user.js' );
+
 //require the Twilio module and create a REST client 
 var client = require('twilio')(accountSid, authToken);
 
